@@ -35,33 +35,18 @@ function write () {
   var loader = new THREE.FontLoader();
   loader.load( './fonts/helvetiker_regular.typeface.json', function ( font ) {
 
-    var xMid, text;
-    var textShape = new THREE.BufferGeometry();
-    var color = 0x006699;
-
-    var matDark = new THREE.LineBasicMaterial( {
-      color: color,
-      side: THREE.DoubleSide
+    var geometry = new THREE.TextGeometry( 'three.js!', {
+      font: font,
+      size: 10,
+      height: 5,
+      curveSegments: 12,
     } );
+    geometry.center();
 
-    var matLite = new THREE.MeshBasicMaterial( {
-      color: color,
-      transparent: true,
-      opacity: 0.4,
-      side: THREE.DoubleSide
-    } );
+    var material = new THREE.MeshLambertMaterial();
 
-    var message = "   Three.js\nSimple text.";
-    var shapes = font.generateShapes( message, 1, 2 );
-    var geometry = new THREE.ShapeGeometry( shapes );
-
-    geometry.computeBoundingBox();
-    geometry.center()
-
-    // make shape ( N.B. edge view not visible )
-    textShape.fromGeometry( geometry );
-    text = new THREE.Mesh( textShape, matLite );
-    scene.add( text );
+    var mesh = new THREE.Mesh(geometry, material);
+    scene.add(mesh);
   })
 }
 
@@ -89,8 +74,8 @@ function draw () {
 
 function init() {
 
-  camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.1, 100 );
-  camera.position.set( 0, 0, 10 );
+  camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.1, 1000 );
+  camera.position.set( 0, 0, 100 );
   camera.up.set(0, 0, 1);
 
   controls = new THREE.OrbitControls( camera );
@@ -98,10 +83,16 @@ function init() {
   controls.update();
 
   scene = new THREE.Scene();
-  scene.background = new THREE.Color( 0xffffff );
-  light = new THREE.DirectionalLight( 0xffffff );
-  light.position.set( 1, 1, 1 ).normalize();
+  scene.background = new THREE.Color( 0x000000 );
+
+  var light = new THREE.AmbientLight( 0x404040 );
   scene.add( light );
+  var dirLight = new THREE.DirectionalLight( 0xffffff, 0.125 );
+  dirLight.position.set( 0, 0, 1 ).normalize();
+  scene.add( dirLight );
+  var pointLight = new THREE.PointLight( 0xffffff, 1.5 );
+  pointLight.position.set( 0, 100, 90 );
+  scene.add( pointLight );
 
   var gridHelper = new THREE.GridHelper(100, 10);
   gridHelper.rotation.x = Math.PI / 2
