@@ -32,7 +32,7 @@ draw();
 
 function draw () {
   var loader = new THREE.FontLoader();
-  loader.load( './fonts/helvetiker_regular.typeface.json', function ( font ) {
+  loader.load( './fonts/source_code.typeface.json', function ( font ) {
 
     var parameters = {
       font: font,
@@ -41,10 +41,10 @@ function draw () {
       curveSegments: 12,
     }
 
-    var vertical = new THREE.TextGeometry( 'three.js', parameters);
+    var vertical = new THREE.TextGeometry( 'JAN_DAN', parameters);
     vertical.center();
 
-    var horizontal = new THREE.TextGeometry( 'three.js', parameters);
+    var horizontal = new THREE.TextGeometry( 'THREEJS', parameters);
     horizontal.center();
     horizontal.rotateX(Math.PI * 0.5);
 
