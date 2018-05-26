@@ -11,6 +11,7 @@
     <script src="./js/OrbitControls.js"></script>
     <script src="./js/Detector.js"></script>
     <script src="./js/SceneUtils.js"></script>
+    <script src="./js/ThreeCSG.js"></script>
   </head>
 
   <body>
@@ -27,11 +28,34 @@ var intersected;
 
 init();
 animate();
+draw();
+
+function draw() {
+  var start_time = (new Date()).getTime();
+  var sphere_geometry_1 = new THREE.SphereGeometry( 2, 64, 8 );
+  var sphere_bsp_1 = new ThreeBSP( sphere_geometry_1 );
+
+  var sphere_geometry_2 = new THREE.SphereGeometry( 2, 8, 32 );
+  var sphere_mesh_2 = new THREE.Mesh( sphere_geometry_2 );
+  sphere_mesh_2.position.x = 2;
+  var sphere_bsp_2 = new ThreeBSP( sphere_mesh_2 );
+
+  var intersect_bsp = sphere_bsp_1.intersect( sphere_bsp_2 );
+
+  var result = intersect_bsp.toMesh( new THREE.MeshLambertMaterial({
+    shading: THREE.SmoothShading,
+    color: 0xff0000
+  }));
+  result.position.x = 6;
+  result.geometry.computeVertexNormals();
+  scene.add( result );
+  console.log( 'Example 3: ' + ((new Date()).getTime() - start_time) + 'ms' );
+}
 
 function init() {
 
-  camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.1, 100000 );
-  camera.position.set( 0, 0, 100 );
+  camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.1, 100 );
+  camera.position.set( 0, 0, 10 );
   camera.up.set(0, 0, 1);
 
   controls = new THREE.OrbitControls( camera );
@@ -40,10 +64,11 @@ function init() {
 
   scene = new THREE.Scene();
   scene.background = new THREE.Color( 0xffffff );
-  light = new THREE.AmbientLight( 0xffffff );
+  light = new THREE.DirectionalLight( 0xffffff );
+  light.position.set( 1, 1, 1 ).normalize();
   scene.add( light );
 
-  var gridHelper = new THREE.GridHelper(1000, 10);
+  var gridHelper = new THREE.GridHelper(100, 10);
   gridHelper.rotation.x = Math.PI / 2
   scene.add(gridHelper);
 
