@@ -29,22 +29,45 @@ animate();
 draw();
 
 function draw () {
-  const material = new THREE.MeshLambertMaterial( {color: 0xffffff} );
+  const verticalM = new THREE.MeshLambertMaterial( {color: 0xffff00} );
+  const horizontalM = new THREE.MeshLambertMaterial( {color: 0xff00ff} );
 
   const n = 12;
   const radius = 20;
   const d = Math.PI * 2 / n;
+  const phase = 0.01
 
   for (let i = 0; i < n; i++) {
-    const geometry = new THREE.BoxGeometry(4, 9, 1)
-    const box = new THREE.Mesh( geometry, material );
-    scene.add( box );
+    const horizontal = new THREE.Mesh( new THREE.BoxGeometry(9, 4, 1) , horizontalM );
+    scene.add( horizontal );
 
-    const alpha = d * i
-    box.position.x = Math.cos(alpha) * radius
-    box.position.z = Math.sin(alpha) * radius
+    const vertical = new THREE.Mesh( new THREE.BoxGeometry(9, 1, 4) , verticalM );
+    scene.add( vertical );
 
-    box.rotation.y = -alpha + Math.PI / 2
+    const alpha = d * i + phase
+
+    horizontal.position.x = Math.cos(alpha) * radius
+    horizontal.position.z = Math.sin(alpha) * radius
+
+    vertical.position.x = Math.cos(alpha) * radius
+    vertical.position.z = Math.sin(alpha) * radius
+
+    const beta = alpha / 2
+    const at = new THREE.Vector3()
+    at.x = Math.cos(alpha) * (radius + Math.sin(beta))
+    at.z = Math.sin(alpha) * (radius + Math.sin(beta))
+    at.y = Math.cos(beta)
+
+    // const axes = new THREE.AxesHelper()
+    // axes.position.copy(at)
+    // scene.add(axes)
+
+    horizontal.lookAt(at)
+    vertical.lookAt(at)
+
+    // horizontal.rotation.x = alpha / 2
+    // horizontal.rotation.y = -alpha // + Math.PI / 2
+    // horizontal.rotation.z = Math.PI / 2
   }
 }
 
