@@ -44,15 +44,14 @@ function draw () {
     box.position.x = Math.cos(alpha) * radius
     box.position.z = Math.sin(alpha) * radius
 
-    const at = new THREE.Vector3()
-    box.lookAt(at)
+    box.rotation.y = -alpha + Math.PI / 2
   }
 }
 
 function init() {
 
   camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.1, 1000 );
-  camera.position.set( 0, 100, 100 );
+  camera.position.set( -100, 100, 100 );
 
   controls = new THREE.OrbitControls( camera );
   controls.target.set( 0, 0, 0 );
@@ -68,8 +67,11 @@ function init() {
   dirLight.position.set( 1, 2, 3 ).normalize();
   scene.add( dirLight );
 
-  var gridHelper = new THREE.GridHelper(100, 10);
-  scene.add(gridHelper);
+  var grid = new THREE.GridHelper(100, 10);
+  scene.add(grid);
+
+  var axes = new THREE.AxesHelper(100)
+  scene.add(axes)
 
   renderer = new THREE.WebGLRenderer( { antialias: false } );
   renderer.setPixelRatio( window.devicePixelRatio );
