@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <title>Three.js</title>
+    <link rel="stylesheet" href="./css/normalize.css"></link>
+    <script src="./js/stats.min.js"></script>
+    <script src="./js/three.min.js"></script>
+    <script src="./js/OrbitControls.js"></script>
+    <script src="./js/Detector.js"></script>
+  </head>
+
+  <body>
+    <div id="info" style="position:absolute; text-align:center; width: 100%; left: 0px;">
+      Intersection
+    </div>
+
+    <script>
+
+if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
+var container, stats, controls;
+var camera, scene, renderer, light;
+var intersected;
+
+init();
+animate();
+draw();
+
+function draw () {
+  const material = new THREE.MeshLambertMaterial( {color: 0xffffff} );
+
+  const n = 12;
+  const radius = 20;
+  const d = Math.PI * 2 / n;
+
+  for (let i = 0; i < n; i++) {
+    const geometry = new THREE.BoxGeometry(4, 9, 1)
+    const box = new THREE.Mesh( geometry, material );
+    scene.add( box );
+
+    const alpha = d * i
+    box.position.x = Math.cos(alpha) * radius
+    box.position.z = Math.sin(alpha) * radius
+
+    // const at = cylinder.position.clone()
+    // at.x += Math.cos(alpha)
+    // at.y += Math.sin(alpha)
+    // at.z += 0
+
+    // console.log(at)
+    // cylinder.lookAt(at)
+  }
+}
+
+function init() {
+
+  camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.1, 1000 );
+  camera.position.set( 0, 100, 100 );
+
+  controls = new THREE.OrbitControls( camera );
+  controls.target.set( 0, 0, 0 );
+  controls.update();
+
+  scene = new THREE.Scene();
+  scene.background = new THREE.Color( 0x000000 );
+
+  var light = new THREE.AmbientLight( 0xffffff, 0.5 );
+  scene.add( light );
+
+  var dirLight = new THREE.DirectionalLight( 0xffffff, 0.5 );
+  dirLight.position.set( 1, 2, 3 ).normalize();
+  scene.add( dirLight );
+
+  var gridHelper = new THREE.GridHelper(100, 10);
+  scene.add(gridHelper);
+
+  renderer = new THREE.WebGLRenderer( { antialias: false } );
+  renderer.setPixelRatio( window.devicePixelRatio );
+  renderer.setSize( window.innerWidth, window.innerHeight );
+  renderer.gammaOutput = true;
+
+  document.body.appendChild( renderer.domElement );
+  window.addEventListener( 'resize', onWindowResize, false );
+
+  // stats
+  stats = new Stats();
+  document.body.appendChild( stats.dom );
+}
+
+function onWindowResize() {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize( window.innerWidth, window.innerHeight );
+}
+
+function animate() {
+  requestAnimationFrame( animate );
+
+  renderer.render( scene, camera );
+  controls.update();
+  stats.update();
+}
+    </script>
+
+  </body>
+</html>
