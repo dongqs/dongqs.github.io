@@ -44,13 +44,8 @@ function draw () {
     box.position.x = Math.cos(alpha) * radius
     box.position.z = Math.sin(alpha) * radius
 
-    // const at = cylinder.position.clone()
-    // at.x += Math.cos(alpha)
-    // at.y += Math.sin(alpha)
-    // at.z += 0
-
-    // console.log(at)
-    // cylinder.lookAt(at)
+    const at = new THREE.Vector3()
+    box.lookAt(at)
   }
 }
 
